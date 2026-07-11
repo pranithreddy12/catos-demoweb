@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="crescent">
+      <rect width="512" height="512" fill="#000"/>
+      <circle cx="250" cy="262" r="112" fill="#fff"/>
+      <circle cx="296" cy="224" r="98" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="512" height="512" fill="#6B6BD6"/>
+  <rect width="512" height="512" fill="#ffffff" mask="url(#crescent)"/>
+  <circle cx="338" cy="172" r="11" fill="#ffffff"/>
+  <circle cx="372" cy="210" r="6.5" fill="#ffffff" fill-opacity="0.85"/>
+  <circle cx="316" cy="214" r="4.5" fill="#ffffff" fill-opacity="0.7"/>
+</svg>

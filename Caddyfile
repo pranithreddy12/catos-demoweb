@@ -1,0 +1,33 @@
+# Production edge for LunaCat: serves the built SPA and proxies /api to the
+# backend, with automatic HTTPS. SITE_ADDRESS is injected at runtime:
+#   - a domain (e.g. app.lunacat.co) -> Caddy auto-provisions a Let's Encrypt cert
+#   - ":80" -> plain HTTP, for a quick no-domain smoke test
+{$SITE_ADDRESS} {
+	encode gzip zstd
+
+	# Baseline security headers. HSTS is added automatically by Caddy on HTTPS;
+	# the rest block MIME-sniffing, framing (clickjacking), and referrer leakage.
+	# A strict Content-Security-Policy is deliberately omitted for now — the app
+	# uses inline styles + Firebase, so a CSP needs its own testing pass.
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# API calls. handle_path strips the /api prefix, so /api/health -> backend /health
+	# (the same rewrite the dev Vite proxy does). Backend is internal-only.
+	handle_path /api/* {
+		reverse_proxy backend:8009
+	}
+
+	# Everything else is the static SPA. try_files falls back to index.html so
+	# client-side routes (/shop, /care, …) resolve; the service worker, manifest
+	# and hashed assets are served directly.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}

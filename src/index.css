@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   PASSPORT TEMPLATES — switch via [data-theme] (see lib/theme).
+   Tokens are space-separated RGB triples so Tailwind's
+   rgb(var(--x) / <alpha>) opacity syntax works.
+   ============================================================ */
+/* ATELIER — light archival passport (default). Ivory paper, deep navy +
+   British-racing green co-primary, gold foil. Instrument Serif + Manrope +
+   Spline Sans Mono. The premium "real document" feel. */
+:root,
+[data-theme='atelier'] {
+  --ink: 33 36 31;
+  --sepia: 33 36 31;
+  --sepia-soft: 84 86 74;
+  --sepia-faint: 139 138 120;
+  --parchment: 250 247 241;
+  --parchment-50: 252 250 242;
+  --parchment-100: 248 244 230;
+  --parchment-200: 236 229 205;
+  --parchment-300: 224 215 184;
+  --parchment-edge: 212 203 168;
+  --parchment-deep: 236 229 205;
+  --gold: 23 58 116;
+  --gold-dark: 16 41 92;
+  --gold-light: 91 131 196;
+  --accent: 107 107 214;        /* periwinkle — primary interactive accent */
+  --shell: 10 11 22;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
+  --radius: 1.125rem;
+  --border-rgb: 23 58 116;
+  --border-a: 0.16;
+  --page-shadow: 0 10px 26px -20px rgba(28, 42, 82, 0.5);
+}
+
+/* AURORA — premium dark editorial. Deep indigo, periwinkle accent,
+   Instrument Serif display + Manrope body. */
+[data-theme='aurora'] {
+  --ink: 236 234 246;
+  --sepia: 236 234 246;
+  --sepia-soft: 148 152 176;
+  --sepia-faint: 106 109 140;
+  --parchment: 14 15 26;
+  --parchment-50: 28 30 60;
+  --parchment-100: 19 20 42;
+  --parchment-200: 33 35 70;
+  --parchment-300: 44 46 88;
+  --parchment-edge: 60 62 110;
+  --parchment-deep: 23 25 51;
+  --gold: 120 122 165;
+  --gold-dark: 90 92 130;
+  --gold-light: 150 152 200;
+  --accent: 139 137 218;
+  --shell: 8 9 18;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --radius: 1.375rem;
+  --border-rgb: 255 255 255;
+  --border-a: 0.08;
+  --page-shadow: 0 24px 60px -40px rgba(0, 0, 0, 0.9);
+}
+
+[data-theme='heritage'] {
+  --ink: 44 36 24;
+  --sepia: 58 47 30;
+  --sepia-soft: 107 91 67;
+  --sepia-faint: 154 138 110;
+  --parchment: 245 239 226;
+  --parchment-50: 251 246 234;
+  --parchment-100: 244 236 217;
+  --parchment-200: 232 225 201;
+  --parchment-300: 223 210 178;
+  --parchment-edge: 205 188 146;
+  --parchment-deep: 239 232 216;
+  --gold: 176 164 135;
+  --gold-dark: 133 122 97;
+  --gold-light: 202 191 159;
+  --accent: 58 47 30;
+  --shell: 59 51 38;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius: 0.5rem;
+  --border-rgb: 58 47 30;
+  --border-a: 0.12;
+  --page-shadow: 0 1px 2px rgba(60, 45, 20, 0.06);
+}
+
+[data-theme='aqua'] {
+  --ink: 15 23 42;
+  --sepia: 30 41 59;
+  --sepia-soft: 100 116 139;
+  --sepia-faint: 148 163 184;
+  --parchment: 255 255 255;
+  --parchment-50: 255 255 255;
+  --parchment-100: 248 250 252;
+  --parchment-200: 241 245 249;
+  --parchment-300: 226 232 240;
+  --parchment-edge: 203 213 225;
+  --parchment-deep: 239 246 255;
+  --gold: 226 232 240;
+  --gold-dark: 148 163 184;
+  --gold-light: 241 245 249;
+  --accent: 37 99 235;
+  --shell: 226 232 240;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius: 1rem;
+  --border-rgb: 148 163 184;
+  --border-a: 0.3;
+  --page-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 16px rgba(15, 23, 42, 0.05);
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply text-ink antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* hide scrollbars inside the phone shell for a native feel */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* paper surfaces */
+.parchment { background-color: rgb(var(--parchment)); }
+.parchment-deep { background-color: rgb(var(--parchment-deep)); }
+
+/* Aurora gets a deep radial glow + gradient panels for the premium feel */
+[data-theme='aurora'] .parchment {
+  background: radial-gradient(125% 80% at 50% -8%, #1b1d3c 0%, #0e0f1a 58%);
+}
+[data-theme='aurora'] .parchment-deep {
+  background: linear-gradient(180deg, #181a36 0%, #131428 100%);
+}
+
+@layer components {
+  /* a single "page" card — quiet hairline border, template radius/shadow */
+  .page {
+    @apply relative;
+    border-radius: var(--radius);
+    border: 1px solid rgb(var(--border-rgb) / var(--border-a));
+    box-shadow: var(--page-shadow);
+  }
+
+  .field-label {
+    @apply block text-[9px] uppercase tracking-[0.16em] text-sepia-faint font-serif;
+  }
+  .field-value { @apply font-serif text-[15px] leading-tight text-sepia; }
+
+  .passport-h {
+    @apply font-serif font-semibold tracking-[0.05em] text-sepia text-center uppercase;
+  }
+
+  .stamp {
+    @apply inline-flex flex-col items-center justify-center text-center font-serif font-semibold uppercase rounded-md;
+    border: 1.5px solid currentColor;
+    padding: 5px 9px;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    opacity: 0.85;
+  }
+
+  .mrz {
+    @apply font-mono text-[10px] tracking-[0.12em] text-sepia/70 break-all;
+  }
+}
+
+.rot-3 { transform: rotate(-3deg); }
+.rot2 { transform: rotate(2.5deg); }
+.rot-6 { transform: rotate(-6deg); }
+
+/* Vet-summary export → clean PDF: print only the summary, on white */
+@media print {
+  body * { visibility: hidden !important; }
+  .printable, .printable * { visibility: visible !important; }
+  .printable {
+    position: absolute; inset: 0; padding: 28px 32px !important;
+    background: #fff !important; color: #1A1B2E !important;
+  }
+  .no-print { display: none !important; }
+  @page { margin: 14mm; }
+}
