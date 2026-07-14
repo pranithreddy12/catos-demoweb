@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth'
 import { auth } from './firebase'
 import { setAuthHooks } from '../api'
+import { DEMO } from './demoData'
 
 interface AuthState {
   user: User | null
@@ -35,11 +36,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setAuthHooks({
-      getToken: async () => (auth.currentUser ? auth.currentUser.getIdToken() : null),
+      getToken: async () => (DEMO ? null : auth.currentUser ? auth.currentUser.getIdToken() : null),
       // On a backend 401, drop the session; onAuthStateChanged flips user->null
       // and the route gate redirects to /signin.
-      onUnauthorized: () => { fbSignOut(auth).catch(() => {}) },
+      onUnauthorized: () => { if (!DEMO) fbSignOut(auth).catch(() => {}) },
     })
+    // Showcase build: skip Firebase entirely and present a signed-in guest so the
+    // app renders off the sample data (see demoData.ts). No real auth involved.
+    if (DEMO) {
+      setUser({ uid: 'demo', email: 'demo@lunacat.app', displayName: 'Showcase Guardian' } as unknown as User)
+      setLoading(false)
+      return
+    }
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u)
       setLoading(false)

@@ -5,14 +5,17 @@
 {$SITE_ADDRESS} {
 	encode gzip zstd
 
-	# Baseline security headers. HSTS is added automatically by Caddy on HTTPS;
-	# the rest block MIME-sniffing, framing (clickjacking), and referrer leakage.
-	# A strict Content-Security-Policy is deliberately omitted for now — the app
-	# uses inline styles + Firebase, so a CSP needs its own testing pass.
+	# Security headers. HSTS is added automatically by Caddy on HTTPS. The CSP was
+	# verified against the production bundle (app loads, fonts/styles render, and
+	# Firebase email/password login works) — 'unsafe-inline' is needed only for
+	# styles (the app uses inline style={}), scripts stay strict 'self'.
+	# img https: allows merchant product images; connect *.googleapis.com is Firebase.
 	header {
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "DENY"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com; worker-src 'self' blob:; manifest-src 'self'; frame-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
 		-Server
 	}
 

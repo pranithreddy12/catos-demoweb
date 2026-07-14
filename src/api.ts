@@ -3,6 +3,8 @@
 // here so every request carries `Authorization: Bearer <token>` and a 401 bounces
 // the user back to sign-in.
 
+import { DEMO, demoGet, demoWrite } from './lib/demoData'
+
 const BASE = '/api'
 
 interface AuthHooks {
@@ -46,6 +48,7 @@ async function withRetry<T>(fn: () => Promise<T>, tries = 3): Promise<T> {
 }
 
 async function get<T>(path: string): Promise<T> {
+  if (DEMO) return demoGet(path) as T
   return withRetry(async () => {
     const r = await fetch(`${BASE}${path}`, { headers: { ...(await authHeader()) } })
     check(r, path)
@@ -53,6 +56,7 @@ async function get<T>(path: string): Promise<T> {
   })
 }
 async function post<T>(path: string, body: unknown): Promise<T> {
+  if (DEMO) return demoWrite(path) as T
   const r = await fetch(`${BASE}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
@@ -62,11 +66,13 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return r.json()
 }
 async function del<T>(path: string): Promise<T> {
+  if (DEMO) return demoWrite(path) as T
   const r = await fetch(`${BASE}${path}`, { method: 'DELETE', headers: { ...(await authHeader()) } })
   check(r, path)
   return r.json()
 }
 async function patch<T>(path: string, body: unknown): Promise<T> {
+  if (DEMO) return demoWrite(path) as T
   const r = await fetch(`${BASE}${path}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
