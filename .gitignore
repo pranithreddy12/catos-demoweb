@@ -1,0 +1,17 @@
+# dependencies / build output — Vercel reinstalls + rebuilds these
+node_modules/
+dist/
+dev-dist/
+.vite/
+
+# local env / secrets — NEVER commit (Firebase web config, etc.)
+.env
+.env.*
+!.env.example
+
+# vercel
+.vercel/
+
+# misc
+*.log
+.DS_Store
