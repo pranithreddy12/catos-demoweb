@@ -2,7 +2,8 @@
 // (frontend/.env, gitignored) — never hardcoded. initializeApp tolerates
 // placeholder values at build time; only live auth calls need real config.
 import { initializeApp } from 'firebase/app'
-import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth'
+import { getAuth, setPersistence, browserLocalPersistence, type Auth } from 'firebase/auth'
+import { DEMO } from './demoData'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,7 +14,13 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
 }
 
-export const firebaseApp = initializeApp(firebaseConfig)
-export const auth = getAuth(firebaseApp)
+// Only initialise Firebase when it's actually usable. The showcase (DEMO) build
+// ships with no Firebase project, and calling getAuth() with an empty apiKey
+// throws auth/invalid-api-key at module load — which blanks the entire app before
+// React mounts. Demo bypasses auth anyway, so skip it (and skip when no key set).
+const firebaseActive = !DEMO && !!firebaseConfig.apiKey
+
+export const firebaseApp = firebaseActive ? initializeApp(firebaseConfig) : null
+export const auth = firebaseActive ? getAuth(firebaseApp!) : ({} as Auth)
 // Keep the session across reloads; getIdToken() then auto-refreshes silently.
-setPersistence(auth, browserLocalPersistence).catch(() => {})
+if (firebaseActive) setPersistence(auth, browserLocalPersistence).catch(() => {})
